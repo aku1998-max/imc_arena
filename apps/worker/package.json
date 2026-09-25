@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/main.ts",
     "start": "node dist/main.js",
-    "build": "esbuild src/main.ts --bundle --platform=node --format=esm --target=node22 --packages=external --outfile=dist/main.js",
+    "build": "node ../../scripts/build-node.mjs src/main.ts dist/main.js",
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run"
   },

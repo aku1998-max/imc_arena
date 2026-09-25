@@ -1,0 +1,113 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # CI uses the local, non-secret defaults from the template.
+      - run: cp .env.example .env
+      - name: Format
+        run: pnpm format:check
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Migrations against a clean database
+        run: |
+          pnpm db:bootstrap
+          pnpm db:migrate
+          pnpm db:migrate # second run must be a no-op
+      - name: Seed through the editorial workflow
+        run: pnpm db:seed
+      - name: Unit and integration tests
+        run: pnpm test
+      - name: OpenAPI document is current
+        run: pnpm openapi && git diff --exit-code docs/openapi.json
+      - name: Production builds
+        run: |
+          pnpm --filter @imc/api build
+          pnpm --filter @imc/worker build
+          pnpm --filter @imc/admin build
+
+  admin-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: cp .env.example .env
+      - run: pnpm --filter @imc/admin exec playwright install --with-deps chromium
+      - name: Admin review/publish browser tests
+        run: pnpm --filter @imc/admin e2e
+
+  mobile-bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Typecheck and unit tests
+        run: |
+          pnpm --filter @imc/mobile typecheck
+          pnpm --filter @imc/mobile test
+      - name: Bundle JavaScript for Android and iOS (no native build)
+        working-directory: apps/mobile
+        env:
+          CI: '1'
+        run: npx expo export --platform android --platform ios --output-dir /tmp/mobile-export
+
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high

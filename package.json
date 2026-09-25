@@ -9,7 +9,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "pnpm -r --parallel run typecheck",
-    "test": "pnpm -r run test",
+    "test": "pnpm -r --workspace-concurrency=1 run test",
     "build": "pnpm -r run build",
     "db:bootstrap": "pnpm --filter @imc/db run bootstrap",
     "db:migrate": "pnpm --filter @imc/db run migrate",
@@ -25,6 +25,7 @@
     "prettier": "^3.9.9",
     "tsx": "^4.23.15",
     "typescript": "~5.9.3",
-    "vitest": "^5.0.2"
+    "vitest": "^5.0.2",
+    "esbuild": "^0.28.2"
   }
 }
