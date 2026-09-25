@@ -1,0 +1,32 @@
+{
+  "name": "@imc/admin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173 --strictPort",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests",
+    "e2e": "playwright test"
+  },
+  "dependencies": {
+    "@imc/contracts": "workspace:*",
+    "@imc/design": "workspace:*",
+    "@supabase/supabase-js": "^2.117.2",
+    "katex": "^0.18.9",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-router-dom": "^7.18.4"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "@types/react": "~19.2.0",
+    "@types/react-dom": "~19.2.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "vite": "^8.3.1",
+    "@imc/db": "workspace:*",
+    "@imc/testing": "workspace:*"
+  }
+}

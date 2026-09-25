@@ -1,0 +1,8 @@
+node_modules
+dist
+coverage
+pnpm-lock.yaml
+apps/mobile/.expo
+apps/admin/test-results
+apps/admin/playwright-report
+docs/openapi.json

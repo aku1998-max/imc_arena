@@ -1,0 +1,21 @@
+{
+  "name": "@imc/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "start": "node dist/main.js",
+    "build": "node ../../scripts/build-node.mjs src/main.ts dist/main.js",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@imc/db": "workspace:*",
+    "@imc/domain": "workspace:*"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "@imc/testing": "workspace:*"
+  }
+}

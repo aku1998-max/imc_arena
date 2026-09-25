@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "IMC Arena",
+    "slug": "imc-arena",
+    "scheme": "imcarena",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#FFFBF0",
+    "ios": {
+      "bundleIdentifier": "org.imc.arena",
+      "supportsTablet": true,
+      "infoPlist": { "ITSAppUsesNonExemptEncryption": false }
+    },
+    "android": {
+      "package": "org.imc.arena",
+      "blockedPermissions": [
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.READ_CONTACTS",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.CAMERA"
+      ]
+    },
+    "plugins": ["expo-router", "expo-secure-store", "expo-localization"],
+    "experiments": { "typedRoutes": false }
+  }
+}

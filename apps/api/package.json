@@ -1,0 +1,35 @@
+{
+  "name": "@imc/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "start": "node dist/server.js",
+    "build": "node ../../scripts/build-node.mjs src/server.ts dist/server.js",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "openapi": "tsx scripts/openapi.ts",
+    "seed": "tsx scripts/seed.ts",
+    "staff:grant": "tsx scripts/staff-grant.ts",
+    "pilot:grant": "tsx scripts/pilot-grant.ts",
+    "dev:token": "tsx scripts/dev-token.ts"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.3.0",
+    "@fastify/helmet": "^13.1.1",
+    "@fastify/rate-limit": "^11.2.0",
+    "@imc/contracts": "workspace:*",
+    "@imc/db": "workspace:*",
+    "@imc/domain": "workspace:*",
+    "fastify": "^5.12.5",
+    "jose": "^6.2.12",
+    "zod": "^4.6.5",
+    "@imc/testing": "workspace:*",
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "@types/pg": "^8.23.1"
+  }
+}

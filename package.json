@@ -1,0 +1,31 @@
+{
+  "name": "imc-arena",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "pnpm -r --parallel run typecheck",
+    "test": "pnpm -r --workspace-concurrency=1 run test",
+    "build": "pnpm -r run build",
+    "db:bootstrap": "pnpm --filter @imc/db run bootstrap",
+    "db:migrate": "pnpm --filter @imc/db run migrate",
+    "db:seed": "pnpm --filter @imc/api run seed",
+    "db:reset": "pnpm --filter @imc/db run reset && pnpm --filter @imc/api run seed",
+    "dev:api": "pnpm --filter @imc/api run dev",
+    "dev:worker": "pnpm --filter @imc/worker run dev",
+    "dev:admin": "pnpm --filter @imc/admin run dev",
+    "openapi": "pnpm --filter @imc/api run openapi"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "prettier": "^3.9.9",
+    "tsx": "^4.23.15",
+    "typescript": "~5.9.3",
+    "vitest": "^5.0.2",
+    "esbuild": "^0.28.2"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "@imc/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "bootstrap": "tsx scripts/bootstrap.ts",
+    "migrate": "tsx scripts/migrate.ts",
+    "reset": "tsx scripts/bootstrap.ts --reset && tsx scripts/migrate.ts"
+  },
+  "dependencies": {
+    "@imc/contracts": "workspace:*",
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.23.1"
+  }
+}
