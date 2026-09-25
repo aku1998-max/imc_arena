@@ -16,14 +16,14 @@
     "@imc/design": "workspace:*",
     "@supabase/supabase-js": "^2.117.2",
     "katex": "^0.18.9",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "react-router-dom": "^7.18.4"
   },
   "devDependencies": {
     "@playwright/test": "1.56.1",
-    "@types/react": "^19.3.0",
-    "@types/react-dom": "^19.3.0",
+    "@types/react": "~19.2.0",
+    "@types/react-dom": "~19.2.0",
     "@vitejs/plugin-react": "^6.1.1",
     "vite": "^8.3.1",
     "@imc/db": "workspace:*",

@@ -282,6 +282,8 @@ export const REPORT_CATEGORIES = [
 export const reportBody = z.strictObject({
   category: z.enum(REPORT_CATEGORIES),
   versionId: uuid.optional(),
+  /** A child reports the item in front of them; the server resolves its version. */
+  itemId: uuid.optional(),
   message: z.string().trim().max(1000).optional(),
 });
 export const reportResponse = z.object({ reportId: uuid });

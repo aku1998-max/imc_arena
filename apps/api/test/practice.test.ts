@@ -510,3 +510,32 @@ describe('content shortage', () => {
     expect(f).toBeDefined();
   });
 });
+
+describe('reporting a question', () => {
+  it('a child can report the item in front of them; another child cannot reference it', async () => {
+    const f = await createFamily(env);
+    const s = await startSession(env, f);
+    const r = await call(env, 'POST', '/v1/reports', {
+      token: f.child,
+      body: { category: 'unclear_question', itemId: s.body.data.nextItemId },
+    });
+    expect(r.status).toBe(201);
+    const [row] = await asOwner(
+      urls.migrationUrl,
+      async (c) =>
+        (
+          await c.query(`select version_id, student_id from app.support_reports where id = $1`, [
+            r.body.data.reportId,
+          ])
+        ).rows,
+    );
+    expect(row.version_id).not.toBeNull();
+    expect(row.student_id).toBe(f.studentId);
+    const other = await createFamily(env);
+    const denied = await call(env, 'POST', '/v1/reports', {
+      token: other.child,
+      body: { category: 'unclear_question', itemId: s.body.data.nextItemId },
+    });
+    expect(denied.status).toBe(404);
+  });
+});

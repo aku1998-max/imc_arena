@@ -579,3 +579,12 @@ export async function latestDailySession(tx: Tx, studentId: string): Promise<Ses
   );
   return rows[0] ?? null;
 }
+
+/** Version of a session item visible to the caller (RLS limits it to the owner/guardian). */
+export async function findItemVersionId(tx: Tx, itemId: string): Promise<string | null> {
+  const { rows } = await tx.query<{ versionId: string }>(
+    `select question_version_id as "versionId" from app.session_items where id = $1`,
+    [itemId],
+  );
+  return rows[0]?.versionId ?? null;
+}

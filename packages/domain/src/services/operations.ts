@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { accounts, content, ops, pgErrorCode, type Tx } from '@imc/db';
+import { accounts, content, ops, pgErrorCode, practice, type Tx } from '@imc/db';
 import { productDefaults } from '../config.js';
 import { DomainError, forbidden, notFound } from '../errors.js';
 import { daysBetween } from '../time.js';
@@ -16,7 +16,12 @@ async function requireAnyRole(tx: Tx, ...roles: string[]) {
 /** Child or adult reports a content/app problem. Length-limited and throttled. */
 export async function createReport(
   tx: Tx,
-  input: { category: string; versionId?: string | undefined; message?: string | undefined },
+  input: {
+    category: string;
+    versionId?: string | undefined;
+    itemId?: string | undefined;
+    message?: string | undefined;
+  },
 ) {
   const p = tx.principal;
   if (p.type !== 'child' && p.type !== 'adult') throw forbidden();
@@ -28,8 +33,12 @@ export async function createReport(
   if (recent >= productDefaults.reportRateLimitPerHour) {
     throw new DomainError('RATE_LIMITED', 'Too many reports. Please try again later.');
   }
-  if (input.versionId) {
-    const v = await content.findVersion(tx, input.versionId);
+  let versionId = input.versionId ?? null;
+  if (input.itemId) {
+    versionId = await practice.findItemVersionId(tx, input.itemId);
+    if (!versionId) throw notFound('Question');
+  } else if (versionId) {
+    const v = await content.findVersion(tx, versionId);
     if (!v) throw notFound('Question');
   }
   const id = randomUUID();
@@ -37,13 +46,13 @@ export async function createReport(
     id,
     studentId: p.type === 'child' ? p.studentId : null,
     accountId: p.type === 'adult' ? p.accountId : null,
-    versionId: input.versionId ?? null,
+    versionId,
     category: input.category,
     message: input.message?.trim() || null,
   });
   await track(tx, 'content_reported', null, {
     category: input.category,
-    contentVersion: input.versionId ?? null,
+    contentVersion: versionId,
   });
   return { reportId: id };
 }
