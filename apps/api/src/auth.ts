@@ -107,12 +107,20 @@ export class Authenticator {
         this.deps.pool,
         { type: 'staff', accountId: claims.sub },
         async (tx) => {
-          const account = await accounts.findAccount(tx, claims.sub);
-          if (!account || account.status !== 'active') return [];
+          // First verified sign-in creates the account row so an administrator can grant a role.
+          const account =
+            (await accounts.findAccount(tx, claims.sub)) ??
+            (await accounts.ensureAccount(tx, claims.sub, 'en'));
+          if (account.status !== 'active') return [];
           return accounts.activeStaffRoles(tx, claims.sub);
         },
       );
-      if (roles.length === 0) throw new DomainError('FORBIDDEN', 'Staff access required.');
+      if (roles.length === 0) {
+        throw new DomainError(
+          'FORBIDDEN',
+          `Staff access required. Ask an administrator to grant a role to account ${claims.sub}.`,
+        );
+      }
       return { type: 'staff', accountId: claims.sub, roles, claims };
     }
 

@@ -17,7 +17,8 @@ await client.connect();
 try {
   await client.query('begin');
   const acct = await client.query('select 1 from app.accounts where id = $1', [accountId]);
-  if (!acct.rowCount) throw new Error('account not found: the person must sign in once first');
+  if (!acct.rowCount)
+    throw new Error('account not found: the person must sign in to the staff website once first');
   await client.query(
     `insert into app.staff_roles (account_id, role, active) values ($1, $2, true)
      on conflict (account_id, role) do update set active = true`,

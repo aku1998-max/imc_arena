@@ -46,6 +46,7 @@ export async function createTestEnv(overrides: Record<string, string> = {}): Pro
     BILLING_DRIVER: 'mock',
     LOG_LEVEL: 'silent',
     AUTH_JWKS_URL: '',
+    RATE_LIMIT_GLOBAL_MAX: '100000',
     ...overrides,
   });
   const base = buildDeps(config, silent);

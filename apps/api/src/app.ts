@@ -74,7 +74,7 @@ export async function buildApp(config: Config, deps: Deps): Promise<FastifyInsta
   });
   await app.register(rateLimit, {
     global: true,
-    max: 600,
+    max: config.RATE_LIMIT_GLOBAL_MAX,
     timeWindow: '1 minute',
     errorResponseBuilder: (req, ctx) => ({
       statusCode: 429,

@@ -19,7 +19,7 @@ Status of spec §19 milestones in this repository (25 September 2026).
 | `pnpm typecheck`                     | all 9 packages clean                                                                                                        |
 | `pnpm format:check`                  | clean                                                                                                                       |
 | `pnpm db:reset`                      | 5 migrations applied; seed imported 158 original questions, published g4=53, g5=52, g6=53 through import → review → publish |
-| `pnpm test`                          | contracts 9, db 3, domain 11, testing 2, worker 2, mobile 7, api 69, total 103 passing                                      |
+| `pnpm test`                          | contracts 9, db 3, domain 11, testing 2, worker 2, mobile 7, api 70, total 104 passing                                      |
 | `pnpm --filter @imc/admin e2e`       | 2 passing (Chromium): editor → reviewer → administrator publication; validation error display                               |
 | `npx expo export --platform android` | Hermes bundle built (monorepo resolution OK)                                                                                |
 | `pnpm openapi`                       | `docs/openapi.json` regenerated; CI checks it is current                                                                    |

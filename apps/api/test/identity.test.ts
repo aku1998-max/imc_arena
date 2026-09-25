@@ -221,3 +221,28 @@ describe('errors never leak internals', () => {
     expect(badUuid.raw).not.toMatch(/select|syntax|stack/i);
   });
 });
+
+describe('first staff sign-in', () => {
+  it('creates the account row so an administrator can grant a role, and tells the person their id', async () => {
+    const { randomUUID } = await import('node:crypto');
+    const newcomer = randomUUID();
+    const token = await adultToken(env, newcomer);
+    const denied = await call(env, 'GET', '/v1/admin/me', { token });
+    expect(denied.status).toBe(403);
+    expect(denied.body.error!.message).toContain(newcomer);
+    const admin = await adultToken(env, '00000000-0000-4000-8000-00000000e003');
+    const grant = await call(env, 'POST', '/v1/admin/staff', {
+      token: admin,
+      body: { accountId: newcomer, role: 'editor', active: true, reason: 'New content editor' },
+    });
+    expect(grant.status).toBe(204);
+    const me = await call(env, 'GET', '/v1/admin/me', { token });
+    expect(me.body.data).toEqual({ accountId: newcomer, roles: ['editor'] });
+    // Granting to an account that has never signed in is refused.
+    const unknown = await call(env, 'POST', '/v1/admin/staff', {
+      token: admin,
+      body: { accountId: randomUUID(), role: 'editor', active: true, reason: 'x-y-z' },
+    });
+    expect(unknown.status).toBe(404);
+  });
+});

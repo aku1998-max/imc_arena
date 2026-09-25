@@ -44,6 +44,7 @@ const schema = z
           .map((x) => x.trim())
           .filter(Boolean),
       ),
+    RATE_LIMIT_GLOBAL_MAX: z.coerce.number().int().min(10).default(600),
     LOG_LEVEL: z
       .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'])
       .default('info'),
