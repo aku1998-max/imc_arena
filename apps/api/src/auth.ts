@@ -2,7 +2,7 @@ import type { PrincipalContext } from '@imc/db';
 import { accounts, withTx } from '@imc/db';
 import { accountsService, DomainError, identity, type Deps } from '@imc/domain';
 import { createRemoteJWKSet, jwtVerify, type JWTPayload } from 'jose';
-import type { Config } from './config.js';
+import type { Config } from '@imc/domain';
 
 export type AuthMode = 'none' | 'child' | 'adult' | 'staff' | 'childOrAdult';
 

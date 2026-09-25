@@ -1,7 +1,7 @@
 import { loadDotEnv, requireEnv } from '@imc/db';
 import { consoleLogger } from '@imc/domain';
-import { loadConfig } from '../src/config.js';
-import { buildDeps } from '../src/deps.js';
+import { loadConfig } from '@imc/domain';
+import { buildDeps } from '@imc/domain';
 import { DEV_STAFF, seedContent, seedStaff } from '../src/seed.js';
 
 loadDotEnv();

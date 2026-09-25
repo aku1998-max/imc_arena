@@ -3,7 +3,7 @@ import { canonicalJson, DomainError, productDefaults, sha256Hex, type Deps } fro
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 import { toContext, type AuthMode, type Authenticator, type Principal } from './auth.js';
-import type { Config } from './config.js';
+import type { Config } from '@imc/domain';
 import { RateLimiter } from './rate-limit.js';
 
 export interface RouteContext<P, Q, B> {

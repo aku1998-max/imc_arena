@@ -1,8 +1,8 @@
 import { loadDotEnv } from '@imc/db';
 import { consoleLogger } from '@imc/domain';
 import { buildApp } from './app.js';
-import { loadConfig } from './config.js';
-import { buildDeps } from './deps.js';
+import { loadConfig } from '@imc/domain';
+import { buildDeps } from '@imc/domain';
 
 loadDotEnv();
 const config = loadConfig();

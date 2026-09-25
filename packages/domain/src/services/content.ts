@@ -422,17 +422,16 @@ export async function retireVersion(
   if (v.state !== 'published') throw invalidState('Only published versions can be retired.');
   await content.setVersionState(tx, versionId, 'retired', { retired: true });
   await content.setActiveVersion(tx, v.questionId, null);
-  let metadata: Record<string, unknown> = {};
   if (input.flagAffectedResults) {
-    const haltedSessions = await practice.abandonActiveSessionsForVersion(tx, versionId);
-    const affectedAttempts = await practice.flagAttemptsForVersion(tx, versionId);
-    metadata = { haltedSessions, affectedAttempts };
-    await ops.raiseOpsAlert(tx, {
-      kind: 'content_correction',
-      dedupeKey: `wrong-key:${versionId}`,
-      details: { versionId, affectedAttempts, haltedSessions },
+    // Staff cannot touch student records; the wrong-key correction runs as a system job that is
+    // committed atomically with the retirement.
+    await ops.enqueueJob(tx, {
+      type: 'content.correction',
+      dedupeKey: `correction:${versionId}`,
+      payload: { versionId, reason: input.reason },
     });
   }
+  const metadata = { flagAffectedResults: input.flagAffectedResults };
   await audit(
     tx,
     'version.retired',
@@ -443,6 +442,30 @@ export async function retireVersion(
     },
   );
   return { versionId, state: 'retired' as const };
+}
+
+/**
+ * Wrong-key runbook (system job): halt active sessions still holding the version, count the
+ * affected attempts and raise an operations alert. Attempts are never rewritten; any explicit
+ * rescoring is a separate, audited decision.
+ */
+export async function applyCorrection(tx: Tx, versionId: string, reason: string) {
+  const haltedSessions = await practice.abandonActiveSessionsForVersion(tx, versionId);
+  const affectedAttempts = await practice.flagAttemptsForVersion(tx, versionId);
+  await ops.raiseOpsAlert(tx, {
+    kind: 'content_correction',
+    dedupeKey: `wrong-key:${versionId}`,
+    details: { versionId, affectedAttempts, haltedSessions },
+  });
+  await audit(
+    tx,
+    'version.correction_applied',
+    { type: 'question_version', id: versionId },
+    {
+      reason,
+      metadata: { haltedSessions, affectedAttempts },
+    },
+  );
 }
 
 export async function updateRights(

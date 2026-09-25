@@ -107,7 +107,7 @@ function templates(grade: number, i: number): Draft[] {
 
   // Fractions
   const den = [4, 5, 6, 8, 10, 12][i % 6]!;
-  const x = 1 + (i % (den - 2));
+  const x = 1 + ((i + Math.floor(i / 6) + g) % (den - 2));
   const y = 1;
   if (d === 3) {
     const whole = den * (2 + (i % 4));

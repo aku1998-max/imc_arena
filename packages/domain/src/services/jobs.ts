@@ -3,7 +3,7 @@ import { productDefaults } from '../config.js';
 import type { Deps } from '../ports.js';
 import { addDays, localDateIn, weekStart } from '../time.js';
 import { billingSweep, processBillingEvent } from './billing.js';
-import { processImport } from './content.js';
+import { applyCorrection, processImport } from './content.js';
 
 const sys = (reason: string) => ({ type: 'system' as const, reason });
 
@@ -23,6 +23,11 @@ export const jobHandlers: Record<string, Handler> = {
   'content.import': async (deps, job) => {
     const { importId } = job.payload as { importId: string };
     await withTx(deps.pool, sys('import'), (tx) => processImport(tx, importId));
+  },
+
+  'content.correction': async (deps, job) => {
+    const { versionId, reason } = job.payload as { versionId: string; reason: string };
+    await withTx(deps.pool, sys('correction'), (tx) => applyCorrection(tx, versionId, reason));
   },
 
   'billing.event': async (deps, job) => {

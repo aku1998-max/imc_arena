@@ -21,3 +21,5 @@ export * as operationsService from './services/operations.js';
 export * as jobs from './services/jobs.js';
 export { hashToken } from './services/identity.js';
 export { computeContentHash, sniffMime } from './services/content.js';
+export { loadConfig, type Config } from './runtime/config.js';
+export { buildDeps } from './runtime/deps.js';

@@ -67,6 +67,22 @@ importers:
         specifier: ^0.28.2
         version: 0.28.2
 
+  apps/worker:
+    dependencies:
+      '@imc/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@imc/domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
+    devDependencies:
+      '@imc/testing':
+        specifier: workspace:*
+        version: link:../../packages/testing
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+
   packages/contracts:
     dependencies:
       zod:

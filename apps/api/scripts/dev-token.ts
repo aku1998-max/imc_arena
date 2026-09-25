@@ -1,6 +1,6 @@
 import { loadDotEnv } from '@imc/db';
 import { mintAdultJwt } from '@imc/testing';
-import { loadConfig } from '../src/config.js';
+import { loadConfig } from '@imc/domain';
 import { DEV_PARENT, DEV_STAFF } from '../src/seed.js';
 
 /**

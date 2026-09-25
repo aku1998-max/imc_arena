@@ -10,7 +10,7 @@ import {
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import type { Authenticator } from '../auth.js';
-import type { Config } from '../config.js';
+import type { Config } from '@imc/domain';
 import { route, sendError, type AnyRoute } from '../http.js';
 
 export const systemRoutes: AnyRoute[] = [

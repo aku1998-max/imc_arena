@@ -14,8 +14,8 @@ import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { buildApp } from '../src/app.js';
-import { loadConfig, type Config } from '../src/config.js';
-import { buildDeps } from '../src/deps.js';
+import { loadConfig, type Config } from '@imc/domain';
+import { buildDeps } from '@imc/domain';
 import { DEV_STAFF, seedContent, seedStaff } from '../src/seed.js';
 
 loadDotEnv();

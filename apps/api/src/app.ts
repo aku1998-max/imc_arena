@@ -5,7 +5,7 @@ import type { Deps } from '@imc/domain';
 import Fastify, { type FastifyInstance } from 'fastify';
 import { randomUUID } from 'node:crypto';
 import { Authenticator } from './auth.js';
-import type { Config } from './config.js';
+import type { Config } from '@imc/domain';
 import { registerRoutes, sendError, type AnyRoute } from './http.js';
 import { RateLimiter } from './rate-limit.js';
 import { adminRoutes } from './routes/admin.js';
