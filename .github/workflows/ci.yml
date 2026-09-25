@@ -100,8 +100,11 @@ jobs:
           CI: '1'
         run: npx expo export --platform android --platform ios --output-dir /tmp/mobile-export
 
+  # Needs the repository's Dependency graph (and, for private repositories, GitHub Advanced
+  # Security). Enable it in Settings -> Code security, then set the repository variable
+  # DEPENDENCY_REVIEW=true to turn this job on.
   dependency-review:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && vars.DEPENDENCY_REVIEW == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read

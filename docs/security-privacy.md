@@ -2,24 +2,24 @@
 
 ## Security checklist (spec §16)
 
-| Item                                                         | State                                                                                                                                             |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Staff MFA                                                    | Enforced via `aal2` claim when `STAFF_REQUIRE_MFA=true`; always on in production config. Enable TOTP MFA for staff in Supabase before production. |
-| Rate-limited OTP and child-token creation                    | OTP: Supabase Auth limits (configure per project). Child sessions: 10/hour/adult. Grants: 10/15 min. Reports: 10/hour. Global 600/min/IP.         |
-| Explicit CORS for admin                                      | Only `ALLOWED_ADMIN_ORIGINS`; native apps need no CORS.                                                                                           |
-| Cookies/CSRF                                                 | Not used: bearer tokens only.                                                                                                                     |
-| TLS                                                          | Terminate at the hosting edge; production config requires an `https://` API base URL.                                                             |
-| Request-size limits                                          | 2 MB JSON body; 1000-char reports; 500-question imports; 2 MB images.                                                                             |
-| Allowlisted content                                          | Zod block schema; no HTML; KaTeX with `trust: false`; image signature check.                                                                      |
-| No dynamic SQL interpolation                                 | All queries parameterized; identifiers in bootstrap are validated against `^[a-z_][a-z0-9_]*$`.                                                   |
-| Signed media URLs                                            | 300 s; solution assets only after an attempt.                                                                                                     |
-| Secret scanning / dependency review                          | Enable GitHub secret scanning + push protection; CI runs `dependency-review-action` on PRs.                                                       |
-| Native tokens in secure storage                              | Child token and adult session in Keychain/Keystore (`expo-secure-store`, chunked).                                                                |
-| Separate migration/runtime accounts                          | `imc_owner` vs `imc_api`; enforced by bootstrap and tests.                                                                                        |
-| Support impersonation                                        | Not implemented (disabled in V1).                                                                                                                 |
-| Export/deletion prove guardianship + grant scope server-side | RLS + single-use action/target grants; tested.                                                                                                    |
-| Logs                                                         | Request id + redacted actor; never bearer tokens, grants, OTPs, bodies or full question payloads.                                                 |
-| Production admin login does not reuse dev privileges         | Dev tokens require `AUTH_JWT_SECRET` (HS256) which production refuses; staff roles are per-environment records.                                   |
+| Item                                                         | State                                                                                                                                                                                        |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Staff MFA                                                    | Enforced via `aal2` claim when `STAFF_REQUIRE_MFA=true`; always on in production config. Enable TOTP MFA for staff in Supabase before production.                                            |
+| Rate-limited OTP and child-token creation                    | OTP: Supabase Auth limits (configure per project). Child sessions: 10/hour/adult. Grants: 10/15 min. Reports: 10/hour. Global 600/min/IP.                                                    |
+| Explicit CORS for admin                                      | Only `ALLOWED_ADMIN_ORIGINS`; native apps need no CORS.                                                                                                                                      |
+| Cookies/CSRF                                                 | Not used: bearer tokens only.                                                                                                                                                                |
+| TLS                                                          | Terminate at the hosting edge; production config requires an `https://` API base URL.                                                                                                        |
+| Request-size limits                                          | 2 MB JSON body; 1000-char reports; 500-question imports; 2 MB images.                                                                                                                        |
+| Allowlisted content                                          | Zod block schema; no HTML; KaTeX with `trust: false`; image signature check.                                                                                                                 |
+| No dynamic SQL interpolation                                 | All queries parameterized; identifiers in bootstrap are validated against `^[a-z_][a-z0-9_]*$`.                                                                                              |
+| Signed media URLs                                            | 300 s; solution assets only after an attempt.                                                                                                                                                |
+| Secret scanning / dependency review                          | Enable GitHub secret scanning + push protection; CI runs `dependency-review-action` on PRs once the Dependency graph is enabled and the repository variable `DEPENDENCY_REVIEW=true` is set. |
+| Native tokens in secure storage                              | Child token and adult session in Keychain/Keystore (`expo-secure-store`, chunked).                                                                                                           |
+| Separate migration/runtime accounts                          | `imc_owner` vs `imc_api`; enforced by bootstrap and tests.                                                                                                                                   |
+| Support impersonation                                        | Not implemented (disabled in V1).                                                                                                                                                            |
+| Export/deletion prove guardianship + grant scope server-side | RLS + single-use action/target grants; tested.                                                                                                                                               |
+| Logs                                                         | Request id + redacted actor; never bearer tokens, grants, OTPs, bodies or full question payloads.                                                                                            |
+| Production admin login does not reuse dev privileges         | Dev tokens require `AUTH_JWT_SECRET` (HS256) which production refuses; staff roles are per-environment records.                                                                              |
 
 ## Data minimization
 
