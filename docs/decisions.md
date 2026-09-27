@@ -59,3 +59,12 @@ These do not block local implementation:
 - Correct/incorrect are never shown by colour alone: green + check + "Correct", orange `#B45309` + cross + "Not quite". Red is avoided for wrong answers.
 - Child screens live in a tab bar (Home, Practice, Retry, Progress, Me). Leaving a session uses `router.dismissTo`, so no finished session stays stacked under the tabs.
 - Mascot images (`apps/mobile/assets/mascot/`) were supplied by the product owner.
+
+## Store release (see [launch.md](launch.md))
+
+- Store name "Math Challenge: IMC Prep", home-screen name "Math Challenge", app ID `th.in.mathchallenge.app`, URL scheme `mathchallenge`.
+- Hosting: Render (API, worker, staff and landing sites, `render.yaml`) and Supabase in Singapore.
+- App Store category Education, not Kids. External links (help, privacy, subscription management) therefore need no parental gate; purchases and deletion still require a fresh parent email code.
+- RevenueCat is loaded lazily and only when a store key is configured, so Expo Go and tests never touch the native module. Development builds keep the API's mock store unless `EXPO_PUBLIC_REAL_STORE=true`.
+- The Full plan price is read from the store (`priceString`), never hard-coded in the app; the landing page states US$6.99.
+- Parents can delete their whole account in the app (store requirement); the API already supported `scope: 'account'`.

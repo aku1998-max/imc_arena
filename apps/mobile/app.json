@@ -1,19 +1,26 @@
 {
   "expo": {
-    "name": "IMC Arena",
-    "slug": "imc-arena",
-    "scheme": "imcarena",
-    "version": "0.1.0",
+    "name": "Math Challenge",
+    "slug": "math-challenge",
+    "scheme": "mathchallenge",
+    "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "backgroundColor": "#FFFBF0",
+    "backgroundColor": "#FCFDFB",
+    "icon": "./assets/icon.png",
     "ios": {
-      "bundleIdentifier": "org.imc.arena",
+      "bundleIdentifier": "th.in.mathchallenge.app",
       "supportsTablet": true,
-      "infoPlist": { "ITSAppUsesNonExemptEncryption": false }
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
-      "package": "org.imc.arena",
+      "package": "th.in.mathchallenge.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#E2F5E9"
+      },
       "blockedPermissions": [
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.ACCESS_COARSE_LOCATION",
@@ -22,7 +29,23 @@
         "android.permission.CAMERA"
       ]
     },
-    "plugins": ["expo-router", "expo-secure-store", "expo-localization"],
-    "experiments": { "typedRoutes": false }
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-localization",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-logo.png",
+          "imageWidth": 260,
+          "resizeMode": "contain",
+          "backgroundColor": "#FCFDFB"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": false
+    }
   }
 }

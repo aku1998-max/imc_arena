@@ -1,8 +1,9 @@
 import { router } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import { Mascot } from '../src/components/Mascot';
+import { PolicyLinks } from '../src/components/PolicyLinks';
 import { Body, Button, Eyebrow, Screen, StickerCard } from '../src/components/ui';
-import { colors, fonts, spacing } from '../src/theme';
+import { spacing } from '../src/theme';
 
 export default function Welcome() {
   return (
@@ -17,15 +18,20 @@ export default function Welcome() {
           <Body muted size="small">
             No ads, no chat and no public profiles. Children use a nickname only.
           </Body>
+          <PolicyLinks />
         </>
       }
     >
       <View style={s.hero}>
-        <Mascot pose="cheer" height={200} />
-        <Eyebrow>Math Challenge</Eyebrow>
-        <Text style={s.title} accessibilityRole="header">
-          IMC <Text style={s.marker}> Arena </Text>
-        </Text>
+        <Image
+          source={require('../assets/logo.png')}
+          style={s.logo}
+          resizeMode="contain"
+          accessibilityRole="header"
+          accessibilityLabel="Math Challenge"
+        />
+        <Mascot pose="cheer" height={180} decorative />
+        <Eyebrow>Get ready for IMC competitions</Eyebrow>
         <Body>Daily maths practice for grades 4–6, with an explanation for every answer.</Body>
       </View>
       <StickerCard>
@@ -41,6 +47,5 @@ export default function Welcome() {
 
 const s = StyleSheet.create({
   hero: { alignItems: 'center', gap: spacing.sm, paddingTop: spacing.md },
-  title: { fontFamily: fonts.bold, fontSize: 40, lineHeight: 48, color: colors.ink },
-  marker: { backgroundColor: colors.marker },
+  logo: { width: 260, height: 97, maxWidth: '100%' },
 });

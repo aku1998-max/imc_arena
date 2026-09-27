@@ -6,11 +6,15 @@ import {
   useFonts,
 } from '@expo-google-fonts/lexend';
 import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { View } from 'react-native';
+import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SessionProvider } from '../src/session';
 import { colors } from '../src/theme';
+
+// Keep the native splash (brand logo) up until the fonts are ready.
+void SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -19,8 +23,12 @@ export default function RootLayout() {
     Lexend_600SemiBold,
     Lexend_700Bold,
   });
+  const ready = loaded || !!error;
+  useEffect(() => {
+    if (ready) void SplashScreen.hideAsync().catch(() => undefined);
+  }, [ready]);
   // If the font fails to load the app still works with the system font.
-  if (!loaded && !error) return <View style={{ flex: 1, backgroundColor: colors.paper }} />;
+  if (!ready) return null;
   return (
     <SafeAreaProvider>
       <SessionProvider>

@@ -49,7 +49,7 @@ export default function NewChild() {
       <Title>Add a child</Title>
       <Card>
         <Body>
-          Consent ({CONSENT_POLICY_VERSION}): IMC Arena stores your child's nickname, grade,
+          Consent ({CONSENT_POLICY_VERSION}): Math Challenge stores your child's nickname, grade,
           timezone and practice answers to run the service and show you progress. We do not collect
           a legal name, birthdate, school, location or contacts, and show no ads. You can export or
           delete this data at any time.

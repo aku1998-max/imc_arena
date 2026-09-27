@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Math Challenge Support</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap"
+    />
+    <style>
+      :root {
+        --paper: #fcfdfb;
+        --grid: #e3efe6;
+        --ink: #172019;
+        --muted: #52625a;
+        --green: #12803f;
+        --border: #cfdcd3;
+        --note: #fff9c9;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background-color: var(--paper);
+        background-image:
+          linear-gradient(var(--grid) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+        background-size: 24px 24px;
+        color: var(--ink);
+        font:
+          400 17px/1.6 'Lexend',
+          'Avenir Next',
+          'Segoe UI',
+          system-ui,
+          sans-serif;
+        padding-inline: 20px;
+      }
+      main {
+        max-width: 720px;
+        margin: 0 auto;
+        padding-block: 32px 64px;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      header a {
+        font-weight: 500;
+      }
+      .brand {
+        font-weight: 700;
+        font-size: 20px;
+        color: var(--ink);
+        text-decoration: none;
+      }
+      .brand span {
+        color: var(--green);
+      }
+      h1 {
+        font-size: clamp(30px, 5vw, 40px);
+        line-height: 1.15;
+        margin: 0 0 8px;
+        text-wrap: balance;
+      }
+      h2 {
+        font-size: 21px;
+        margin: 36px 0 8px;
+      }
+      p,
+      li {
+        color: var(--ink);
+      }
+      .muted {
+        color: var(--muted);
+      }
+      a {
+        color: #0d5f2e;
+      }
+      .card {
+        background: #fff;
+        border: 1.5px solid var(--ink);
+        border-radius: 16px;
+        padding: 20px 22px;
+        box-shadow: 6px 6px 0 var(--green);
+        margin-top: 20px;
+      }
+      ul {
+        padding-left: 22px;
+      }
+      li + li {
+        margin-top: 6px;
+      }
+      footer {
+        margin-top: 48px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+      details {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-top: 10px;
+      }
+      summary {
+        font-weight: 600;
+        cursor: pointer;
+      }
+      details p {
+        margin: 10px 0 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <a class="brand" href="index.html">Math <span>Challenge</span></a
+        ><a href="index.html">Back to home</a>
+      </header>
+      <h1>Support</h1>
+      <p class="muted">Help for parents and students using the Math Challenge app.</p>
+
+      <div class="card">
+        <p>
+          <b>Contact us:</b>
+          <a href="mailto:support@mathchallenge.in.th">support@mathchallenge.in.th</a>
+        </p>
+        <p class="muted" style="margin: 6px 0 0">
+          Tell us the device you use and what happened. We usually reply within 2 working days.
+        </p>
+      </div>
+
+      <h2>Common questions</h2>
+      <details>
+        <summary>How do I set up the app for my child?</summary>
+        <p>
+          Install the app, tap "I'm a parent — get started", sign in with your email and the code we
+          send, give consent, then create your child's profile with a nickname and grade. Tap "Start
+          child mode" and hand the phone over.
+        </p>
+      </details>
+      <details>
+        <summary>What is free and what is in the Full plan?</summary>
+        <p>
+          The daily challenge (5 questions a day with explanations) and 7 days of progress are free.
+          The Full plan adds practice by topic, retrying mistakes and 30 days of progress. The price
+          is shown in the app before you buy.
+        </p>
+      </details>
+      <details>
+        <summary>How do I cancel the Full plan?</summary>
+        <p>
+          Subscriptions are managed by your app store. On iPhone: Settings → your name →
+          Subscriptions. On Android: Google Play → Profile → Payments and subscriptions →
+          Subscriptions. You keep access until the end of the paid period.
+        </p>
+      </details>
+      <details>
+        <summary>I bought the Full plan but it isn't unlocked</summary>
+        <p>
+          Open the parent area, choose your child and tap "Restore purchases". Make sure you are
+          signed in to the same Apple or Google account you paid with. If it still doesn't work,
+          email us.
+        </p>
+      </details>
+      <details>
+        <summary>My child found a mistake in a question</summary>
+        <p>
+          After answering, tap "Report a problem with this question". Our question team reviews
+          every report.
+        </p>
+      </details>
+      <details>
+        <summary>How do I delete our data?</summary>
+        <p>
+          In the parent area, choose your child and use "Delete profile". This removes the profile
+          and all practice history. See the <a href="privacy.html">privacy policy</a> for details.
+        </p>
+      </details>
+
+      <footer>© 2026 Math Challenge · <a href="privacy.html">Privacy policy</a></footer>
+    </main>
+  </body>
+</html>

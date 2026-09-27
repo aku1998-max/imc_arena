@@ -1,6 +1,6 @@
 # Math Challenge landing page
 
-A single self-contained file (`index.html`): the mascot and logo images are embedded, and the
+The site is `index.html` plus `privacy.html` and `support.html` (the stores require both URLs). `index.html` is self-contained: the mascot and logo images are embedded, and the
 only external request is Google Fonts. Upload it to any static host as the site's `index.html`.
 
 Not deployed from this repository. Hosting options:

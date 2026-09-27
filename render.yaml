@@ -1,0 +1,92 @@
+# Render Blueprint: API, worker, staff website and landing page.
+# Database and parent email sign-in are on Supabase (create the project in the same region).
+# Values marked `sync: false` are secrets: Render asks for them when the Blueprint is created.
+# Nothing here deploys until the owner connects this repository in the Render dashboard.
+# See docs/launch.md.
+
+envVarGroups:
+  - name: math-challenge-server
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: NODE_VERSION
+        value: '22'
+      - key: API_BASE_URL
+        sync: false # https://api.<your-domain> or the Render URL of math-challenge-api
+      - key: DATABASE_URL
+        sync: false # Supabase session pooler URL for the imc_api role (docs/runbooks/database-roles.md)
+      - key: AUTH_ISSUER
+        sync: false # https://<project>.supabase.co/auth/v1
+      - key: AUTH_AUDIENCE
+        value: authenticated
+      - key: AUTH_JWKS_URL
+        sync: false # https://<project>.supabase.co/auth/v1/.well-known/jwks.json
+      - key: SUPABASE_URL
+        sync: false # https://<project>.supabase.co
+      - key: STORAGE_DRIVER
+        value: supabase
+      - key: STORAGE_BUCKET
+        value: imc-private
+      - key: STORAGE_SERVER_CREDENTIAL
+        sync: false # Supabase secret (service) key, server only
+      - key: BILLING_DRIVER
+        value: revenuecat
+      - key: BILLING_WEBHOOK_SECRET
+        generateValue: true # paste the same value into the RevenueCat webhook Authorization header
+      - key: REVENUECAT_API_KEY
+        sync: false # RevenueCat secret API key
+      - key: BILLING_PRODUCT_IDS
+        value: imc_pro_monthly
+      - key: ALLOWED_ADMIN_ORIGINS
+        sync: false # URL of math-challenge-staff
+      - key: LOG_LEVEL
+        value: info
+
+services:
+  - type: web
+    name: math-challenge-api
+    runtime: node
+    region: singapore
+    plan: starter
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @imc/api build
+    startCommand: node apps/api/dist/server.js
+    healthCheckPath: /health
+    autoDeploy: false
+    envVars:
+      - fromGroup: math-challenge-server
+
+  - type: worker
+    name: math-challenge-worker
+    runtime: node
+    region: singapore
+    plan: starter
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @imc/worker build
+    startCommand: node apps/worker/dist/main.js
+    autoDeploy: false
+    envVars:
+      - fromGroup: math-challenge-server
+
+  - type: web
+    name: math-challenge-staff
+    runtime: static
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @imc/admin build
+    staticPublishPath: apps/admin/dist
+    autoDeploy: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: VITE_SUPABASE_PUBLISHABLE_KEY
+        sync: false
+
+  - type: web
+    name: math-challenge-site
+    runtime: static
+    buildCommand: echo "static landing page"
+    staticPublishPath: apps/landing
+    autoDeploy: false

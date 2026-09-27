@@ -1,6 +1,6 @@
 import type { StudentProfile } from '@imc/contracts';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Linking, View } from 'react-native';
 import { Reauth } from '../../../src/components/Reauth';
 import {
@@ -16,7 +16,14 @@ import {
 import { useQuery } from '../../../src/hooks';
 import { lastNDays, percent } from '../../../src/lib/dates';
 import { friendlyMessage } from '../../../src/lib/api-client';
-import { purchase } from '../../../src/purchases';
+import { PolicyLinks } from '../../../src/components/PolicyLinks';
+import { PRO_PRODUCT_ID } from '../../../src/config';
+import {
+  fullPlanPrice,
+  manageSubscriptionUrl,
+  purchase,
+  PurchaseCancelledError,
+} from '../../../src/purchases';
 import { useSession } from '../../../src/session';
 
 interface Home {
@@ -70,6 +77,10 @@ export default function ChildDetail() {
   const [timezone, setTimezone] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [price, setPrice] = useState<string | null>(null);
+  useEffect(() => {
+    void fullPlanPrice().then(setPrice);
+  }, []);
 
   const act = async (fn: () => Promise<void>) => {
     setError(null);
@@ -208,11 +219,22 @@ export default function ChildDetail() {
         <Body>
           Plan:{' '}
           {home.data.access.pro
-            ? `Pro${home.data.access.validUntil ? ` until ${new Date(home.data.access.validUntil).toLocaleDateString()}` : ''}`
+            ? `Full plan${home.data.access.validUntil ? ` until ${new Date(home.data.access.validUntil).toLocaleDateString()}` : ''}`
             : 'Free (daily challenge and basic progress)'}
         </Body>
         {billing.data?.billingEnabled && !home.data.access.pro && (
-          <Button label="Unlock Pro for this child" onPress={() => setSensitive('purchase')} />
+          <>
+            <Body muted>
+              Full plan: practice by topic, retry mistakes and 30-day progress
+              {price ? ` for ${price} per month` : ''}. Renews monthly until you cancel in your
+              store account.
+            </Body>
+            <Button
+              label={price ? `Get the Full plan · ${price}/month` : 'Get the Full plan'}
+              onPress={() => setSensitive('purchase')}
+            />
+            <PolicyLinks />
+          </>
         )}
         {billing.data?.billingEnabled && (
           <Button
@@ -231,7 +253,7 @@ export default function ChildDetail() {
           <Button
             label="Manage subscription"
             kind="secondary"
-            onPress={() => void Linking.openURL('https://apps.apple.com/account/subscriptions')}
+            onPress={() => void Linking.openURL(manageSubscriptionUrl())}
           />
         )}
       </Card>
@@ -255,7 +277,7 @@ export default function ChildDetail() {
               ? `Delete ${s.nickname}'s profile and history`
               : sensitive === 'export'
                 ? 'Export practice data'
-                : 'Unlock Pro'
+                : 'Get the Full plan'
           }
           onCancel={() => setSensitive(null)}
           onGrant={async (grant) => {
@@ -279,11 +301,19 @@ export default function ChildDetail() {
                 'POST',
                 '/v1/billing/purchase-intents',
                 {
-                  body: { studentId: id, productId: 'imc_pro_monthly' },
+                  body: { studentId: id, productId: PRO_PRODUCT_ID },
                   adultGrant: grant,
                 },
               );
-              await purchase(api, intent);
+              try {
+                await purchase(api, intent);
+              } catch (e) {
+                if (e instanceof PurchaseCancelledError) {
+                  setSensitive(null);
+                  return;
+                }
+                throw e;
+              }
               await api.request('POST', '/v1/billing/restore', { body: {} });
               await home.refresh();
               setMessage('Purchase verified.');
