@@ -51,3 +51,11 @@ These do not block local implementation:
 - Final retention policy (defaults in [security-privacy.md](security-privacy.md)).
 - Paid launch: one-child entitlement scope, prices/product ids, countries, store accounts, refund
   and transaction-reassignment policy.
+
+## Child app visual design ("Graph Paper")
+
+- Brand green `#12803F` matches the Math Challenge elephant's jersey and has 5.0:1 contrast with white text.
+- Font is Lexend (bundled through `@expo-google-fonts/lexend`); screens stay blank until it loads, and fall back to the system font on error.
+- Correct/incorrect are never shown by colour alone: green + check + "Correct", orange `#B45309` + cross + "Not quite". Red is avoided for wrong answers.
+- Child screens live in a tab bar (Home, Practice, Retry, Progress, Me). Leaving a session uses `router.dismissTo`, so no finished session stays stacked under the tabs.
+- Mascot images (`apps/mobile/assets/mascot/`) were supplied by the product owner.

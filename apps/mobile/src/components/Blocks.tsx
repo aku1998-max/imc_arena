@@ -3,7 +3,7 @@ import katex from 'katex';
 import { useState } from 'react';
 import { Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { colors, minTouchTarget, spacing, typography } from '../theme';
+import { colors, fonts, minTouchTarget, spacing, typography } from '../theme';
 import { Button } from './ui';
 
 const KATEX_CSS = 'https://cdn.jsdelivr.net/npm/katex@0.18.9/dist/katex.min.css';
@@ -16,7 +16,7 @@ function mathHtml(latex: string, display: boolean) {
     trust: false,
     output: 'html',
   });
-  return `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="${KATEX_CSS}"><style>body{margin:0;font-size:20px;color:${colors.text};background:transparent}</style></head><body>${body}</body></html>`;
+  return `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="${KATEX_CSS}"><style>body{margin:0;font-size:20px;color:${colors.ink};background:transparent}</style></head><body>${body}</body></html>`;
 }
 
 /** Math via KaTeX in a sandboxed WebView; screen readers get the reviewed spoken alternative. */
@@ -83,16 +83,20 @@ function ZoomableImage({ url, alt }: { url: string; alt: string }) {
 export function Blocks({
   blocks,
   assets,
+  large = false,
 }: {
   blocks: ContentBlock[];
   assets: Record<string, { url: string }>;
+  /** Question stems read larger than explanations. */
+  large?: boolean;
 }) {
+  const textStyle = [s.text, large && s.textLarge];
   return (
     <View style={{ gap: spacing.sm }}>
       {blocks.map((b, i) => {
         if (b.type === 'text')
           return (
-            <Text key={i} style={s.text}>
+            <Text key={i} style={textStyle}>
               {b.text}
             </Text>
           );
@@ -102,7 +106,7 @@ export function Blocks({
         return a ? (
           <ZoomableImage key={i} url={a.url} alt={b.alt} />
         ) : (
-          <Text key={i} style={s.text}>
+          <Text key={i} style={textStyle}>
             {b.alt}
           </Text>
         );
@@ -123,13 +127,26 @@ export function OptionContent({ option }: { option: QuestionOption }) {
 
 const s = StyleSheet.create({
   text: {
+    fontFamily: fonts.regular,
     fontSize: typography.fontSizeBody + 1,
     lineHeight: typography.lineHeightBody + 2,
-    color: colors.text,
+    color: colors.ink,
   },
-  option: { fontSize: typography.fontSizeBody, color: colors.text, flexShrink: 1 },
-  image: { width: '100%', aspectRatio: 4 / 3, backgroundColor: colors.surface },
-  hint: { fontSize: typography.fontSizeSmall, color: colors.textMuted, textAlign: 'center' },
+  textLarge: { fontFamily: fonts.medium, fontSize: 22, lineHeight: 31 },
+  option: {
+    fontFamily: fonts.medium,
+    fontSize: 18,
+    lineHeight: 25,
+    color: colors.ink,
+    flexShrink: 1,
+  },
+  image: { width: '100%', aspectRatio: 4 / 3, backgroundColor: colors.surface, borderRadius: 12 },
+  hint: {
+    fontFamily: fonts.regular,
+    fontSize: typography.fontSizeSmall,
+    color: colors.inkMuted,
+    textAlign: 'center',
+  },
   zoom: { flex: 1, backgroundColor: colors.surface },
   zoomClose: { padding: spacing.md, minHeight: minTouchTarget + spacing.md * 2 },
 });
